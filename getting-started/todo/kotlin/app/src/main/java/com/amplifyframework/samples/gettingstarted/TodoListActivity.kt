@@ -1,6 +1,7 @@
 package com.amplifyframework.samples.gettingstarted
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -10,12 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.amplifyframework.datastore.generated.model.Priority
 import com.amplifyframework.datastore.generated.model.Todo
-import com.amplifyframework.samples.core.ItemAdapter
 import com.amplifyframework.samples.core.ListActivity
 import com.amplifyframework.samples.core.databinding.ActivityMainBinding
 
-class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
-    private val itemAdapter: TodoItemAdapter = TodoItemAdapter(this)
+class TodoListActivity : ListActivity(), NewTodoItemAdapter.OnItemClickListener {
+    private val itemAdapter = NewTodoItemAdapter(this, this)
     private var hideStatus: Boolean = true // Whether we want to show or hide completed tasks
     private lateinit var binding: ActivityMainBinding
 
@@ -43,7 +43,6 @@ class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
 
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(recyclerView)
-        ItemAdapter.setContext(this)
 
         // Observe changes bi-directional
         itemAdapter.observe()
@@ -82,19 +81,19 @@ class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
                 true
             }
             R.id.priority_asc -> {
-                itemAdapter.sortPriority(hideStatus, TodoItemAdapter.SortOrder.ASCENDING)
+                itemAdapter.sortPriority(hideStatus, NewTodoItemAdapter.SortOrder.ASCENDING)
                 true
             }
             R.id.priority_des -> {
-                itemAdapter.sortPriority(hideStatus, TodoItemAdapter.SortOrder.DESCENDING)
+                itemAdapter.sortPriority(hideStatus, NewTodoItemAdapter.SortOrder.DESCENDING)
                 true
             }
             R.id.name_asc -> {
-                itemAdapter.sortName(hideStatus, TodoItemAdapter.SortOrder.ASCENDING)
+                itemAdapter.sortName(hideStatus, NewTodoItemAdapter.SortOrder.ASCENDING)
                 true
             }
             R.id.name_des -> {
-                itemAdapter.sortName(hideStatus, TodoItemAdapter.SortOrder.DESCENDING)
+                itemAdapter.sortName(hideStatus, NewTodoItemAdapter.SortOrder.DESCENDING)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -122,10 +121,15 @@ class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
         }
     }
 
-    // When text is clicked, open up the OptionsBarFragment to edit item
-    override fun onTextClick(position: Int, text: String, priority: Priority) {
-        val optionsInstance =
-            OptionsBarFragment.newInstance(itemAdapter, false, position, text, priority)
-        optionsInstance.show(supportFragmentManager, "TAG")
+    override fun onTextClick(position: Int, data: Todo?) {
+        data?.let {
+            val optionsInstance =
+                OptionsBarFragment.newInstance(itemAdapter, false, position, it.name, it.priority)
+            optionsInstance.show(supportFragmentManager, "TAG")
+        } ?: Log.w(TAG, "todo item unexpectedly null!")
+    }
+
+    companion object {
+        private const val TAG = "TodoListActivity"
     }
 }
