@@ -19,7 +19,7 @@ class OptionsBarFragment : BottomSheetDialogFragment(), View.OnClickListener {
     private var _binding: OptionsBarBinding? = null
     private val binding get() = _binding!!
     private lateinit var sheetView: View
-    private lateinit var itemAdapter: NewTodoItemAdapter
+    private lateinit var itemAdapter: TodoItemAdapter
     private var position: Int = 0
     private var isNewItem: Boolean = false
     private lateinit var priority: Priority
@@ -34,7 +34,7 @@ class OptionsBarFragment : BottomSheetDialogFragment(), View.OnClickListener {
         const val ITEM_TEXT = "ItemText"
         const val PRIORITY = "Priority"
         fun newInstance(
-            itemAdapter: NewTodoItemAdapter,
+            itemAdapter: TodoItemAdapter,
             isNewItem: Boolean,
             position: Int,
             text: String,
@@ -65,7 +65,7 @@ class OptionsBarFragment : BottomSheetDialogFragment(), View.OnClickListener {
         _binding = OptionsBarBinding.inflate(inflater, container, false)
         sheetView = binding.root
         val b: Bundle? = arguments
-        itemAdapter = b?.getSerializable(ITEM_ADAPTER) as NewTodoItemAdapter
+        itemAdapter = b?.getSerializable(ITEM_ADAPTER) as TodoItemAdapter
         position = b.getInt(POSITION)
         isNewItem = b.getBoolean(IS_NEW_ITEM)
         priority = b.getSerializable(PRIORITY) as Priority

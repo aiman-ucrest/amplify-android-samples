@@ -14,8 +14,8 @@ import com.amplifyframework.datastore.generated.model.Todo
 import com.amplifyframework.samples.core.ListActivity
 import com.amplifyframework.samples.core.databinding.ActivityMainBinding
 
-class TodoListActivity : ListActivity(), NewTodoItemAdapter.OnItemClickListener {
-    private val itemAdapter = NewTodoItemAdapter(this, this)
+class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
+    private val itemAdapter = TodoItemAdapter(this, this)
     private var hideStatus: Boolean = true // Whether we want to show or hide completed tasks
     private lateinit var binding: ActivityMainBinding
 
@@ -30,7 +30,7 @@ class TodoListActivity : ListActivity(), NewTodoItemAdapter.OnItemClickListener 
         // Swipe to delete feature
         val swipeHandler = object : SwipeToDelete(this) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val adapter = recyclerView.adapter as NewTodoItemAdapter
+                val adapter = recyclerView.adapter as TodoItemAdapter
                 adapter.deleteModel(viewHolder.adapterPosition)
             }
         }
@@ -81,19 +81,19 @@ class TodoListActivity : ListActivity(), NewTodoItemAdapter.OnItemClickListener 
                 true
             }
             R.id.priority_asc -> {
-                itemAdapter.sortPriority(hideStatus, NewTodoItemAdapter.SortOrder.ASCENDING)
+                itemAdapter.sortPriority(hideStatus, TodoItemAdapter.SortOrder.ASCENDING)
                 true
             }
             R.id.priority_des -> {
-                itemAdapter.sortPriority(hideStatus, NewTodoItemAdapter.SortOrder.DESCENDING)
+                itemAdapter.sortPriority(hideStatus, TodoItemAdapter.SortOrder.DESCENDING)
                 true
             }
             R.id.name_asc -> {
-                itemAdapter.sortName(hideStatus, NewTodoItemAdapter.SortOrder.ASCENDING)
+                itemAdapter.sortName(hideStatus, TodoItemAdapter.SortOrder.ASCENDING)
                 true
             }
             R.id.name_des -> {
-                itemAdapter.sortName(hideStatus, NewTodoItemAdapter.SortOrder.DESCENDING)
+                itemAdapter.sortName(hideStatus, TodoItemAdapter.SortOrder.DESCENDING)
                 true
             }
             else -> super.onOptionsItemSelected(item)

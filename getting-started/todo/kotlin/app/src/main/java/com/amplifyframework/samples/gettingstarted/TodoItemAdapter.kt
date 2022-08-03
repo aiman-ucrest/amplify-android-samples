@@ -1,12 +1,16 @@
 package com.amplifyframework.samples.gettingstarted
 
+import android.R
 import android.app.Activity
+import android.content.Context
 import android.content.res.ColorStateList
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.core.model.query.QuerySortBy
@@ -15,14 +19,24 @@ import com.amplifyframework.core.model.temporal.Temporal
 import com.amplifyframework.datastore.generated.model.Priority
 import com.amplifyframework.datastore.generated.model.Todo
 import com.amplifyframework.samples.core.ItemAdapter
+import com.amplifyframework.samples.gettingstarted.databinding.TodoItemBinding
 import java.io.Serializable
-import java.util.Date
-import java.util.TimeZone
+import java.util.*
 import java.util.concurrent.TimeUnit
 
-class TodoItemAdapter(private val listener: OnItemClickListener) : ItemAdapter<Todo>(),
-    Serializable {
+class TodoItemAdapter(context: Context, private val listener: OnItemClickListener? = null) :
+    ItemAdapter<Todo>(context), Serializable {
     private var completedItems = mutableListOf<Todo>() // A list to hold completed items
+
+    override fun getViewHolder(view: ViewDataBinding): RecyclerView.ViewHolder {
+        return ItemViewHolder(view as TodoItemBinding)
+    }
+
+    override fun getViewBinding(inflater: LayoutInflater, parent: ViewGroup): TodoItemBinding {
+        return TodoItemBinding.inflate(inflater, parent, false)
+    }
+
+    // AWS-related starts
 
     // Reacts dynamically to updates of data to the underlying Storage Engine
     fun observe() {
@@ -57,15 +71,9 @@ class TodoItemAdapter(private val listener: OnItemClickListener) : ItemAdapter<T
             .build()
     }
 
-    override fun getModelClass(): Class<out Todo> {
-        return Todo::class.java
-    }
+    override fun getModelClass() = Todo::class.java
 
-    override fun getLayout() = R.layout.todo_item
 
-    override fun getViewHolder(view: View): RecyclerView.ViewHolder {
-        return ItemViewHolder(view)
-    }
 
     // A custom query method specifically for TodoItemAdapter class
     fun query(showStatus: Boolean) {
@@ -86,8 +94,8 @@ class TodoItemAdapter(private val listener: OnItemClickListener) : ItemAdapter<T
                 if (!showStatus) {
                     appendList(completedItems)
                 }
-                if (cont is Activity) {
-                    (cont as Activity).runOnUiThread {
+                if (context is Activity) {
+                    context.runOnUiThread {
                         notifyDataSetChanged()
                     }
                 }
@@ -99,10 +107,6 @@ class TodoItemAdapter(private val listener: OnItemClickListener) : ItemAdapter<T
     // Sorts list by date created
     fun sortDateCreated(showStatus: Boolean) {
         query(showStatus)
-    }
-
-    enum class SortOrder {
-        ASCENDING, DESCENDING
     }
 
     // Sorts list by priority ascending
@@ -151,8 +155,8 @@ class TodoItemAdapter(private val listener: OnItemClickListener) : ItemAdapter<T
                 if (!showStatus) {
                     appendList(completedItems)
                 }
-                if (cont is Activity) {
-                    (cont as Activity).runOnUiThread {
+                if (context is Activity) {
+                    context.runOnUiThread {
                         notifyDataSetChanged()
                     }
                 }
@@ -180,30 +184,7 @@ class TodoItemAdapter(private val listener: OnItemClickListener) : ItemAdapter<T
         setModel(position, updatedTodo)
     }
 
-    // Defines the colors corresponding to each Priority
-    private fun priorityColor(priority: Priority): Int {
-        return when (priority) {
-            Priority.LOW -> ContextCompat.getColor(cont, R.color.blue)
-            Priority.NORMAL -> ContextCompat.getColor(cont, R.color.yellow)
-            Priority.HIGH -> ContextCompat.getColor(cont, R.color.red)
-        }
-    }
 
-    // Sets the color of the checkBox
-    private fun CheckBox.setCheckBoxColor(color: Int) {
-        val colorStateList = ColorStateList(
-            arrayOf(
-                intArrayOf(-android.R.attr.state_checked), // unchecked
-                intArrayOf(android.R.attr.state_checked) // checked
-            ),
-            intArrayOf(
-                color, // unchecked color
-                color // checked color
-            )
-        )
-        // set the radio button's button tint list
-        buttonTintList = colorStateList
-    }
 
     // Shows completed tasks in recyclerView
     fun showCompletedTasks() {
@@ -225,42 +206,86 @@ class TodoItemAdapter(private val listener: OnItemClickListener) : ItemAdapter<T
         return todo
     }
 
-    // ViewHolder class
-    inner class ItemViewHolder(view: View) :
-        RecyclerView.ViewHolder(view), Binder<Todo>, View.OnClickListener {
-        private val textView: TextView = view.findViewById(R.id.todo_row_item)
-        private val checkBox: CheckBox = view.findViewById(R.id.todo_checkbox)
-        private lateinit var text: String
-        private lateinit var priority: Priority
 
-        override fun bind(data: Todo) {
-            textView.text = data.name
-            checkBox.setCheckBoxColor(priorityColor(data.priority))
-            checkBox.isChecked = data.completedAt != null
-            text = data.name
-            priority = data.priority
-        }
+    // AWS-related ends
 
-        init {
-            checkBox.setOnClickListener(this)
-            textView.setOnClickListener(this)
-        }
-
-        override fun onClick(v: View?) {
-            val position: Int = adapterPosition
-            when (v?.id) {
-                R.id.todo_checkbox -> {
-                    listener.onCheckClick(position, checkBox.isChecked)
-                }
-                R.id.todo_row_item -> {
-                    listener.onTextClick(position, text, priority)
-                }
+    // Defines the colors corresponding to each Priority
+    private fun priorityColor(priority: Priority): Int {
+        return when (priority) {
+            Priority.LOW -> {
+                ContextCompat.getColor(
+                    context,
+                    com.amplifyframework.samples.gettingstarted.R.color.blue
+                )
+            }
+            Priority.NORMAL -> {
+                ContextCompat.getColor(
+                    context,
+                    com.amplifyframework.samples.gettingstarted.R.color.yellow
+                )
+            }
+            Priority.HIGH -> {
+                ContextCompat.getColor(
+                    context,
+                    com.amplifyframework.samples.gettingstarted.R.color.red
+                )
             }
         }
     }
 
+    // Sets the color of the checkBox
+    private fun CheckBox.setCheckBoxColor(color: Int) {
+        val colorStateList = ColorStateList(
+            arrayOf(
+                intArrayOf(-R.attr.state_checked), // unchecked
+                intArrayOf(R.attr.state_checked) // checked
+            ),
+            intArrayOf(
+                color, // unchecked color
+                color // checked color
+            )
+        )
+        // set the radio button's button tint list
+        buttonTintList = colorStateList
+    }
+
+
     interface OnItemClickListener {
         fun onCheckClick(position: Int, isChecked: Boolean)
-        fun onTextClick(position: Int, text: String, priority: Priority)
+        fun onTextClick(position: Int, data: Todo?)
+    }
+
+    enum class SortOrder {
+        ASCENDING, DESCENDING
+    }
+
+    inner class ItemViewHolder(private val binding: TodoItemBinding) :
+        RecyclerView.ViewHolder(binding.root),
+        Binder<Todo>, View.OnClickListener {
+
+        init {
+            binding.todoCheckbox.setOnClickListener(this)
+            binding.todoRowItem.setOnClickListener(this)
+        }
+
+        // from Binder<T>
+        override fun bind(data: Todo) {
+            binding.item = data
+            binding.todoCheckbox.setCheckBoxColor(priorityColor(data.priority))
+        }
+
+        // from View.OnClickListener
+        override fun onClick(v: View?) {
+            val position: Int = adapterPosition
+            when (v?.id) {
+                com.amplifyframework.samples.gettingstarted.R.id.todo_checkbox -> {
+                    listener?.onCheckClick(position, binding.todoCheckbox.isChecked)
+                }
+                com.amplifyframework.samples.gettingstarted.R.id.todo_row_item -> {
+                    listener?.onTextClick(position, binding.item)
+                }
+            }
+        }
+
     }
 }

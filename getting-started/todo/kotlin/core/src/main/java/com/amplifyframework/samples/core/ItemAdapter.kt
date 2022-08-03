@@ -4,26 +4,19 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.core.model.Model
 
-abstract class ItemAdapter<T : Model>() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class ItemAdapter<T : Model>(protected val context: Context) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items = mutableListOf<T>() // List that gets displayed by viewHolder
 
-    companion object {
-        lateinit var cont: Context
-        fun setContext(con: Context) {
-            cont = con
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val adapterLayout = LayoutInflater.from(parent.context)
-            .inflate(getLayout(), parent, false)
-        return getViewHolder(adapterLayout)
+        val view = getViewBinding(LayoutInflater.from(parent.context), parent)
+        return getViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -39,10 +32,10 @@ abstract class ItemAdapter<T : Model>() : RecyclerView.Adapter<RecyclerView.View
     override fun getItemCount() = items.size
 
     // Returns the ViewHolder
-    abstract fun getViewHolder(view: View): RecyclerView.ViewHolder
+    abstract fun getViewHolder(view: ViewDataBinding): RecyclerView.ViewHolder
 
     // Returns the layout
-    abstract fun getLayout(): Int
+    abstract fun getViewBinding(inflater: LayoutInflater, parent: ViewGroup): ViewDataBinding
 
     // Returns the model class
     abstract fun getModelClass(): Class<out T>
@@ -57,8 +50,8 @@ abstract class ItemAdapter<T : Model>() : RecyclerView.Adapter<RecyclerView.View
                     items.add(item)
                     Log.i("Tutorial", "Item loaded: ${item.id}")
                 }
-                if (cont is Activity) {
-                    (cont as Activity).runOnUiThread {
+                if (context is Activity) {
+                    context.runOnUiThread {
                         notifyDataSetChanged()
                     }
                 }
