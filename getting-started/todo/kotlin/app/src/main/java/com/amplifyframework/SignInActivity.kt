@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.samples.gettingstarted.databinding.ActivitySigninBinding
-import java.util.logging.Logger
 
 class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySigninBinding
@@ -45,7 +44,6 @@ class SignInActivity : AppCompatActivity() {
         Log.d(TAG, "onLaunchForgotPassword::")
 
     }
-
 
 
     private fun trySignIn(email: String, pwd: String) {

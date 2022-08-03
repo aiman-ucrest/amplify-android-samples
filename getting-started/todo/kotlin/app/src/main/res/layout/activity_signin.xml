@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="handler"
             type="com.amplifyframework.SignInActivity" />
@@ -11,6 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="0dp"
@@ -106,15 +108,14 @@
             android:backgroundTint="@color/primary_color"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="@{()->handler.onSignIn()}"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.861"
             app:layout_constraintStart_toEndOf="@+id/textView4"
             app:layout_constraintTop_toTopOf="@+id/guideline3"
             app:srcCompat="@drawable/ic_baseline_arrow_forward_24"
-            app:tint="@color/white"
-            android:onClick="@{()->handler.onSignIn()}"
-            />
+            app:tint="@color/white" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
@@ -129,11 +130,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="42dp"
             android:layout_marginBottom="42dp"
+            android:onClick="@{()->handler.onLaunchSignUp()}"
             android:text="@string/signup"
             android:textAppearance="@style/Caption"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:onClick="@{()->handler.onLaunchSignUp()}" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/signin_forgotpassword_button"
@@ -141,12 +142,12 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="42dp"
+            android:onClick="@{()->handler.onLaunchForgotPassword()}"
             android:text="@string/forgot_password"
             android:textAppearance="@style/Caption"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.837"
-            app:layout_constraintStart_toEndOf="@+id/signin_signup_button"
-            android:onClick="@{()->handler.onLaunchForgotPassword()}" />
+            app:layout_constraintStart_toEndOf="@+id/signin_signup_button" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
