@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="handler"
-            type="com.amplifyframework.SignInActivity" />
+            type="com.amplifyframework.SignUpActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="42dp"
             android:layout_marginTop="52dp"
-            android:text="@string/here_to_get"
+            android:text="@string/start_here"
             android:textAppearance="@style/Title.Large"
             app:layout_constraintBottom_toTopOf="@+id/textView2"
             app:layout_constraintEnd_toEndOf="parent"
@@ -31,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="42dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/welcome"
+            android:text="@string/register"
             android:textAppearance="@style/Title.Large"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
@@ -47,35 +48,50 @@
             app:layout_constraintGuide_begin="196dp" />
 
         <EditText
-            android:id="@+id/signin_email_input"
+            android:id="@+id/signup_username_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="42dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:ems="10"
-            android:hint="@string/email"
+            android:hint="Username"
             android:inputType="textEmailAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline" />
 
         <EditText
-            android:id="@+id/signin_password_input"
+            android:id="@+id/signup_email_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="42dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="52dp"
+            android:ems="10"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/signup_username_input" />
+
+        <EditText
+            android:id="@+id/signup_password_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="42dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="16dp"
             android:ems="10"
             android:hint="@string/password"
             android:inputType="textPassword"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signin_email_input"
+            app:layout_constraintTop_toBottomOf="@+id/signup_email_input"
             app:layout_constraintVertical_bias="0.0" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -83,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="401dp" />
+            app:layout_constraintGuide_begin="468dp" />
 
         <TextView
             android:id="@+id/textView4"
@@ -92,14 +108,14 @@
             android:layout_marginStart="42dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/signin"
+            android:text="@string/signup"
             android:textAppearance="@style/Title.Small"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/signin_submit_button"
+            android:id="@+id/signup_submit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -107,7 +123,7 @@
             android:backgroundTint="@color/primary_color"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="@{()->handler.onSignIn()}"
+            android:onClick="@{()->handler.onSignUp()}"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.861"
@@ -121,32 +137,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="499dp" />
+            app:layout_constraintGuide_begin="576dp" />
 
         <TextView
-            android:id="@+id/signin_signup_button"
+            android:id="@+id/signup_signin_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="42dp"
+            android:layout_marginEnd="42dp"
             android:layout_marginBottom="42dp"
-            android:onClick="@{()->handler.onLaunchSignUp()}"
-            android:text="@string/signup"
+            android:onClick="@{()->handler.onLaunchSignIn()}"
+            android:text="@string/signin"
             android:textAppearance="@style/Caption"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/signin_forgotpassword_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="42dp"
-            android:onClick="@{()->handler.onLaunchForgotPassword()}"
-            android:text="@string/forgot_password"
-            android:textAppearance="@style/Caption"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.837"
-            app:layout_constraintStart_toEndOf="@+id/signin_signup_button" />
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.amplifyframework.core.Amplify
+import com.amplifyframework.samples.core.ActivityNavigationUtil
 import com.amplifyframework.samples.gettingstarted.databinding.ActivitySigninBinding
 
 class SignInActivity : AppCompatActivity() {
@@ -37,7 +38,11 @@ class SignInActivity : AppCompatActivity() {
 
     fun onLaunchSignUp() {
         Log.d(TAG, "onLaunchSignUp::")
-
+        ActivityNavigationUtil.navigateToActivity(
+            this,
+            SignUpActivity::class.java,
+            ActivityNavigationUtil.ActivityFinishMode.KEEP_ACTIVITY
+        )
     }
 
     fun onLaunchForgotPassword() {
@@ -54,7 +59,7 @@ class SignInActivity : AppCompatActivity() {
                 if (result.isSignInComplete) {
                     launchMainAppScreen()
                 } else {
-                    showToastMessage("Sign in not complete")
+                    showToastMessage("Sign in not complete!")
                 }
             },
             { error -> showToastMessage(error.message) }
@@ -62,8 +67,11 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun launchMainAppScreen() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        ActivityNavigationUtil.navigateToActivity(
+            this,
+            MainActivity::class.java,
+            ActivityNavigationUtil.ActivityFinishMode.FINISH_ALL
+        )
     }
 
     private fun showToastMessage(msg: String?) {
