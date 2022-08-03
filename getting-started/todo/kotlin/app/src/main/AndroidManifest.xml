@@ -16,6 +16,8 @@
             android:exported="false"/>
         <activity android:name="com.amplifyframework.SignUpActivity"
             android:exported="false"/>
+        <activity android:name="com.amplifyframework.SignUpConfirmationActivity"
+            android:exported="false"/>
         <activity android:name="com.amplifyframework.SignInActivity"
             android:exported="true">
             <intent-filter>

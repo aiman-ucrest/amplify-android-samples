@@ -10,6 +10,7 @@ import com.amplifyframework.auth.AuthUserAttributeKey
 import com.amplifyframework.auth.options.AuthSignUpOptions
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.samples.core.ActivityNavigationUtil
+import com.amplifyframework.samples.core.Constants.EXTRA_EMAIL
 import com.amplifyframework.samples.gettingstarted.databinding.ActivitySignupBinding
 
 class SignUpActivity : AppCompatActivity() {
@@ -52,20 +53,31 @@ class SignUpActivity : AppCompatActivity() {
 
 
     private fun trySignUp(email: String, pwd: String, username: String) {
+        Log.d(TAG, "trySignUp:: email= $email, pwd= $pwd, username= $username")
         Amplify.Auth.signUp(
             email,
             pwd,
             AuthSignUpOptions.builder()
-                .userAttribute(AuthUserAttributeKey.preferredUsername(), username).build(),
+                .userAttribute(AuthUserAttributeKey.preferredUsername(), username)
+                .userAttribute(AuthUserAttributeKey.email(), email)
+                .build(),
             { launchToSignUpConfirmation(email) },
-            { error -> showToastMessage(error.message) }
+            { error ->
+                showToastMessage(error.message)
+                Log.e(TAG, error.message, error)
+            }
         )
     }
 
     private fun launchToSignUpConfirmation(email: String) {
-        // todo
-        /*val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)*/
+        ActivityNavigationUtil.navigateToActivity(
+            this,
+            SignUpConfirmationActivity::class.java,
+            Bundle().apply {
+                putString(EXTRA_EMAIL, email)
+            },
+            ActivityNavigationUtil.ActivityFinishMode.FINISH_ALL
+        )
     }
 
     private fun showToastMessage(msg: String?) {
