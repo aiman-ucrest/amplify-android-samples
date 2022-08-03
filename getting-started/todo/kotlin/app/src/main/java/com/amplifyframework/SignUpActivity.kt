@@ -79,7 +79,7 @@ class SignUpActivity : AppCompatActivity() {
             },
             { error ->
                 showToastMessage(error.message)
-                Log.e(TAG, error.message, error)
+                Log.w(TAG, error.message, error)
             }
         )
     }

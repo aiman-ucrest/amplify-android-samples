@@ -53,13 +53,6 @@ class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
         itemAdapter.observe()
     }
 
-    private fun testAuth() {
-        Amplify.Auth.fetchAuthSession(
-            { Log.i(TAG, "Auth session = $it") },
-            { error -> Log.e(TAG, "Failed to fetch auth session", error) }
-        )
-    }
-
     // Call query on start to load from backend
     override fun onStart() {
         super.onStart()
@@ -120,7 +113,7 @@ class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
                     },
                     { e ->
                         showToastMessage(e.message ?: e.toString())
-                        Log.e(TAG, "Sign out unsuccessful", e)
+                        Log.w(TAG, "Sign out unsuccessful", e)
                     }
                 )
                 true

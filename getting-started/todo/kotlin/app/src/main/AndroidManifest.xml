@@ -18,6 +18,10 @@
             android:exported="false"/>
         <activity android:name="com.amplifyframework.SignUpConfirmationActivity"
             android:exported="false"/>
+        <activity android:name="com.amplifyframework.ForgotPasswordActivity"
+            android:exported="false"/>
+        <activity android:name="com.amplifyframework.ResetPasswordActivity"
+            android:exported="false"/>
         <activity android:name="com.amplifyframework.SignInActivity"
             android:exported="true">
             <intent-filter>

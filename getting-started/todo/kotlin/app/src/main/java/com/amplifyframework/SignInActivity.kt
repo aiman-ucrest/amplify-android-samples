@@ -73,7 +73,11 @@ class SignInActivity : AppCompatActivity() {
 
     fun onLaunchForgotPassword() {
         Log.d(TAG, "onLaunchForgotPassword::")
-
+        ActivityNavigationUtil.navigateToActivity(
+            this,
+            ForgotPasswordActivity::class.java,
+            ActivityNavigationUtil.ActivityFinishMode.KEEP_ACTIVITY
+        )
     }
 
 
