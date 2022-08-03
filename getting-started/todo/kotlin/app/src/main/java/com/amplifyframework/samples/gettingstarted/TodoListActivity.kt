@@ -21,7 +21,7 @@ class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        testAuth()
+        // testAuth()
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swiperefresh)
