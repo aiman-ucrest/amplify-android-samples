@@ -30,11 +30,36 @@
             android:layout_height="wrap_content"
             android:text='@{item.name, default= @string/sample_text}'
             android:textSize="@dimen/text_size"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@id/todo_checkbox"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.333"
+            app:layout_constraintBaseline_toBaselineOf="@+id/todo_checkbox"/>
+
+        <TextView
+            android:id="@+id/todo_row_created_date_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@string/created_at'
+            android:textSize="@dimen/smaller_text_size"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/todo_checkbox"
+            app:layout_constraintTop_toBottomOf="@+id/todo_row_item"
+            app:layout_constraintVertical_bias="0.333" />
+
+        <TextView
+            android:id="@+id/todo_row_created_date"
+            android:layout_width="@dimen/dimen_0"
+            android:layout_height="wrap_content"
+            android:text='@{item.createdAt.format(), default= @string/sample_text}'
+            android:textSize="@dimen/smaller_text_size"
+            android:layout_marginStart="@dimen/dimen_8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/todo_row_created_date_label"
+            app:layout_constraintTop_toBottomOf="@+id/todo_row_item"
             app:layout_constraintVertical_bias="0.333" />
 
         <View
@@ -47,7 +72,7 @@
             android:background="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/todo_checkbox" />
+            app:layout_constraintTop_toBottomOf="@id/todo_row_created_date" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

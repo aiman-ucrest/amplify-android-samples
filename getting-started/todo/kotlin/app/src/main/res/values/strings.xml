@@ -16,4 +16,5 @@
     <string name="sort">Sort</string>
     <string name="alphabetically">Alphabetically</string>
     <string name="by_date_created">By Date Created</string>
+    <string name="created_at">Created At:</string>
 </resources>
