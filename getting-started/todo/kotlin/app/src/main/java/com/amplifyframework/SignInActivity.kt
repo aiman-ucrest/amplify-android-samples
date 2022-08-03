@@ -1,6 +1,5 @@
 package com.amplifyframework
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.samples.core.ActivityNavigationUtil
+import com.amplifyframework.samples.gettingstarted.TodoListActivity
 import com.amplifyframework.samples.gettingstarted.databinding.ActivitySigninBinding
 
 class SignInActivity : AppCompatActivity() {
@@ -57,7 +57,7 @@ class SignInActivity : AppCompatActivity() {
             pwd,
             { result ->
                 if (result.isSignInComplete) {
-                    launchMainAppScreen()
+                    launchTodoScreen()
                 } else {
                     showToastMessage("Sign in not complete!")
                 }
@@ -66,10 +66,10 @@ class SignInActivity : AppCompatActivity() {
         )
     }
 
-    private fun launchMainAppScreen() {
+    private fun launchTodoScreen() {
         ActivityNavigationUtil.navigateToActivity(
             this,
-            MainActivity::class.java,
+            TodoListActivity::class.java,
             ActivityNavigationUtil.ActivityFinishMode.FINISH_ALL
         )
     }

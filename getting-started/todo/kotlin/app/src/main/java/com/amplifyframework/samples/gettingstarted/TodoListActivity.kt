@@ -5,14 +5,18 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.amplifyframework.SignInActivity
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.datastore.generated.model.Priority
 import com.amplifyframework.datastore.generated.model.Todo
+import com.amplifyframework.samples.core.ActivityNavigationUtil
 import com.amplifyframework.samples.core.ListActivity
+import java.util.logging.Logger
 
 class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
     private val itemAdapter = TodoItemAdapter(this, this)
@@ -104,7 +108,26 @@ class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
                 itemAdapter.sortName(hideStatus, TodoItemAdapter.SortOrder.DESCENDING)
                 true
             }
-            else -> super.onOptionsItemSelected(item)
+            R.id.signout -> {
+                Amplify.Auth.signOut(
+                    {
+                        showToastMessage("Signed out.")
+                        ActivityNavigationUtil.navigateToActivity(
+                            this,
+                            SignInActivity::class.java,
+                            ActivityNavigationUtil.ActivityFinishMode.FINISH_ALL
+                        )
+                    },
+                    { e ->
+                        showToastMessage(e.message ?: e.toString())
+                        Log.e(TAG, "Sign out unsuccessful", e)
+                    }
+                )
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
         }
     }
 

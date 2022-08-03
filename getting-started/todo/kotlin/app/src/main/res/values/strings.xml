@@ -37,4 +37,5 @@
     <string name="let_me_help">Let me help!</string>
     <string name="send_password_code">Send</string>
     <string name="happy_again">Are you happy again?</string>
+    <string name="signout">Sign Out</string>
 </resources>
