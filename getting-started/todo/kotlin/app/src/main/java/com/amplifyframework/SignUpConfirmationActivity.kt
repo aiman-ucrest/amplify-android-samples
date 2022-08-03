@@ -6,6 +6,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.amplifyframework.auth.result.step.AuthSignUpStep
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.samples.core.ActivityNavigationUtil
 import com.amplifyframework.samples.core.Constants.EXTRA_EMAIL
@@ -59,8 +60,12 @@ class SignUpConfirmationActivity : AppCompatActivity() {
             Amplify.Auth.confirmSignUp(
                 it,
                 code,
-                {
-                    onLaunchSignIn()
+                { result ->
+                    if (result.nextStep.signUpStep == AuthSignUpStep.DONE) {
+                        onLaunchSignIn()
+                    } else {
+                        showToastMessage("Something went wrong! Please retry.")
+                    }
                 },
                 { error -> showToastMessage(error.message) }
             )

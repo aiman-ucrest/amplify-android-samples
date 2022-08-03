@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.amplifyframework.auth.AuthUserAttributeKey
 import com.amplifyframework.auth.options.AuthSignUpOptions
+import com.amplifyframework.auth.result.step.AuthSignUpStep
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.samples.core.ActivityNavigationUtil
 import com.amplifyframework.samples.core.Constants.EXTRA_EMAIL
@@ -61,7 +62,21 @@ class SignUpActivity : AppCompatActivity() {
                 .userAttribute(AuthUserAttributeKey.preferredUsername(), username)
                 .userAttribute(AuthUserAttributeKey.email(), email)
                 .build(),
-            { launchToSignUpConfirmation(email) },
+            { result ->
+                if (result.isSignUpComplete) {
+                    when (result.nextStep.signUpStep) {
+                        AuthSignUpStep.CONFIRM_SIGN_UP_STEP -> {
+                            launchToSignUpConfirmation(email)
+                        }
+                        AuthSignUpStep.DONE -> {
+                            onLaunchSignIn()
+                        }
+                    }
+
+                } else {
+                    showToastMessage("Something went wrong! Please retry.")
+                }
+            },
             { error ->
                 showToastMessage(error.message)
                 Log.e(TAG, error.message, error)
