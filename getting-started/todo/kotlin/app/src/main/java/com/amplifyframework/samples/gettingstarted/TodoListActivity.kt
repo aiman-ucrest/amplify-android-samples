@@ -9,19 +9,20 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.amplifyframework.core.Amplify
 import com.amplifyframework.datastore.generated.model.Priority
 import com.amplifyframework.datastore.generated.model.Todo
 import com.amplifyframework.samples.core.ListActivity
-import com.amplifyframework.samples.core.databinding.ActivityMainBinding
 
 class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
     private val itemAdapter = TodoItemAdapter(this, this)
     private var hideStatus: Boolean = true // Whether we want to show or hide completed tasks
-    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        testAuth()
+
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swiperefresh)
         recyclerView.adapter = itemAdapter
@@ -46,6 +47,13 @@ class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
 
         // Observe changes bi-directional
         itemAdapter.observe()
+    }
+
+    private fun testAuth() {
+        Amplify.Auth.fetchAuthSession(
+            { Log.i(TAG, "Auth session = $it") },
+            { error -> Log.e(TAG, "Failed to fetch auth session", error) }
+        )
     }
 
     // Call query on start to load from backend
