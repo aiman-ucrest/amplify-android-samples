@@ -72,7 +72,9 @@ abstract class ItemAdapter<T : Model>(protected val context: Context) :
     // Adds a model to DataStore if save is true, otherwise only adds model to list
     fun addModel(model: T, save: Boolean) {
         items.add(model)
-        if (save) save(model)
+        if (save) {
+            save(model)
+        }
     }
 
     // Deletes a model from Datastore and list

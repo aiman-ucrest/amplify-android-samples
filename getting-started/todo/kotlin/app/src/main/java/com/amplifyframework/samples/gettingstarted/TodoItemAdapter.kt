@@ -74,7 +74,6 @@ class TodoItemAdapter(context: Context, private val listener: OnItemClickListene
     override fun getModelClass() = Todo::class.java
 
 
-
     // A custom query method specifically for TodoItemAdapter class
     fun query(showStatus: Boolean) {
         clearList()
@@ -183,7 +182,6 @@ class TodoItemAdapter(context: Context, private val listener: OnItemClickListene
         val updatedTodo = updateModel(todo, todo.name, todo.priority, null)
         setModel(position, updatedTodo)
     }
-
 
 
     // Shows completed tasks in recyclerView
