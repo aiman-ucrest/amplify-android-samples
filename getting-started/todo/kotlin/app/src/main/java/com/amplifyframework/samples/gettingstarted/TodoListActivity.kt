@@ -111,7 +111,7 @@ class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
             R.id.signout -> {
                 Amplify.Auth.signOut(
                     {
-                        showToastMessage("Signed out.")
+                        showToastMessage("Signed out")
                         ActivityNavigationUtil.navigateToActivity(
                             this,
                             SignInActivity::class.java,

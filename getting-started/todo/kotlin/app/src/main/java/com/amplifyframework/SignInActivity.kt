@@ -6,6 +6,8 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.amplifyframework.auth.cognito.AWSCognitoAuthSession
+import com.amplifyframework.auth.result.AuthSessionResult
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.samples.core.ActivityNavigationUtil
 import com.amplifyframework.samples.gettingstarted.TodoListActivity
@@ -21,6 +23,30 @@ class SignInActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.handler = this
+        fetchIdentityId()
+
+    }
+
+    private fun fetchIdentityId() {
+        Amplify.Auth.fetchAuthSession(
+            { result ->
+                val cognitoAuthSession = result as AWSCognitoAuthSession
+                when (cognitoAuthSession.identityId.type) {
+                    AuthSessionResult.Type.SUCCESS -> {
+                        showToastMessage("Welcome back!")
+                        launchTodoScreen()
+                    }
+                    AuthSessionResult.Type.FAILURE -> {
+                        showToastMessage("Please sign in")
+                        val error = cognitoAuthSession.identityId.error?.message ?: cognitoAuthSession.identityId.error.toString()
+                        Log.d(TAG, "IdentityId not present because: $error")
+                    }
+                }
+            },
+            { error ->
+                showToastMessage(error.message)
+            }
+        )
     }
 
     fun onSignIn() {
