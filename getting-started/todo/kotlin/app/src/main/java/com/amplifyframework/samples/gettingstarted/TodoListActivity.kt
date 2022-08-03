@@ -30,7 +30,7 @@ class TodoListActivity : ListActivity(), NewTodoItemAdapter.OnItemClickListener 
         // Swipe to delete feature
         val swipeHandler = object : SwipeToDelete(this) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val adapter = recyclerView.adapter as TodoItemAdapter
+                val adapter = recyclerView.adapter as NewTodoItemAdapter
                 adapter.deleteModel(viewHolder.adapterPosition)
             }
         }
