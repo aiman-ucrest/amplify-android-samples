@@ -7,17 +7,19 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class DefaultWebSocketAdapter : IWebSocketAdapter {
+    private val TAG = "DefaultWebSocketAdapter"
+    val TIMEOUT_INTERVAL = 60L
+    val RECONNECT_DELAY = 5L
+
     private val client: OkHttpClient =
         OkHttpClient.Builder()
-            .pingInterval(60, TimeUnit.SECONDS)
+            .pingInterval(TIMEOUT_INTERVAL, TimeUnit.SECONDS)
             .build()
     private var session: WebSocket? = null
     var hasActiveConnection = false
         private set
     var isConnectRequested = false
         private set
-
-    private val TAG = "DefaultWebSocketAdapter"
 
     /**
      * @return true if initiated, else false
@@ -94,18 +96,7 @@ class DefaultWebSocketAdapter : IWebSocketAdapter {
             if (!isHasConnection()) {
                 create(url, observer)
             }
-        }, 5, TimeUnit.SECONDS) // reconnect in after 2s
-        /*if (client.dispatcher.executorService.isShutdown) {
-            Log.w(TAG, "closeAndReconnect:: executorService already shutdown!")
-        } else {
-            Executors.newSingleThreadScheduledExecutor().schedule({
-                Log.d(TAG, "closeAndReconnect:: execute after 5s delay")
-                close()
-                if (!isHasConnection()) {
-                    create(url, observer)
-                }
-            }, 5, TimeUnit.SECONDS) // reconnect in after 2s
-        }*/
+        }, RECONNECT_DELAY, TimeUnit.SECONDS) // reconnect in after 5s
     }
 
     /**

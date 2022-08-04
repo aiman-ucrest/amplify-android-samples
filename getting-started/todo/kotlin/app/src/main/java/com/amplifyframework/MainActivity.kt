@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onFailure(errorMsg: String) {
             viewModel.isConnected.postValue(false)
+            updateDescTextView("===Connection Retry===")
             showToastMessage(errorMsg)
         }
 
@@ -58,8 +59,6 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
 
         binding.descTextview.movementMethod = ScrollingMovementMethod()
-
-        //fetchIdentityId()
     }
 
     override fun onResume() {
@@ -144,8 +143,6 @@ class MainActivity : AppCompatActivity() {
             val formatter =
                 SimpleDateFormat("HH:mm:ss.SSS", Locale.ENGLISH) //or use getDateTimeInstance()
             val formattedDate = formatter.format(date)
-
-            //binding.descTextview.append("\n$formattedDate")
             binding.descTextview.append("\n[$formattedDate]\t\t$text\n")
         }
     }
