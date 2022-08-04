@@ -45,6 +45,11 @@ class MainActivity: AppCompatActivity() {
             updateDescTextView("===Closed===")
         }
 
+        override fun onFailure(errorMsg: String) {
+            viewModel.isConnected.postValue(false)
+            showToastMessage(errorMsg)
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

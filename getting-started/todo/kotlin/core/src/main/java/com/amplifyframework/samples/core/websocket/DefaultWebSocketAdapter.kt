@@ -39,8 +39,10 @@ class DefaultWebSocketAdapter : IWebSocketAdapter {
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                Log.w(TAG, "onFailure::", t)
+                Log.w(TAG, "onFailure:: response= $response", t)
                 isConnectRequested = false
+                observer.onFailure(t.message ?: t.toString())
+                // todo request reconnect
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {

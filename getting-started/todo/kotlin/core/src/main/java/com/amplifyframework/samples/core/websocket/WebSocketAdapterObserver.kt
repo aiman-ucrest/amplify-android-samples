@@ -6,4 +6,6 @@ abstract class WebSocketAdapterObserver {
     abstract fun onMessage(message: String)
 
     abstract fun onClose(status: String)
+
+    abstract fun onFailure(errorMsg: String)
 }
