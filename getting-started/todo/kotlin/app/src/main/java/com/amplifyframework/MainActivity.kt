@@ -102,7 +102,7 @@ class MainActivity: AppCompatActivity() {
 
     fun onPing() {
         Log.d(TAG, "onPing::")
-        val msg= "\tMe: Ping!"
+        val msg= "\tClient: Ping!"
         val enqueued = webSocketAdapter.send(msg)
         if (enqueued) {
             updateDescTextView(msg)
