@@ -27,15 +27,15 @@ class MainActivity: AppCompatActivity() {
     private val webSocketAdapter = DefaultWebSocketAdapter()
     private val observer = object : WebSocketAdapterObserver() {
         override fun onConnect() {
-            updateDescTextView("Connected")
+            updateDescTextView("===Connected===")
         }
 
         override fun onMessage(message: String) {
-            updateDescTextView("Message Received: $message")
+            updateDescTextView("\tServer: $message")
         }
 
         override fun onClose(status: String) {
-            updateDescTextView("Closed")
+            updateDescTextView("===Closed===")
         }
 
     }
@@ -123,7 +123,7 @@ class MainActivity: AppCompatActivity() {
     private fun updateDescTextView(text: String) {
         handler.post {
             binding.descTextview.visibility = View.VISIBLE
-            binding.descTextview.text = text
+            binding.descTextview.text = "${binding.descTextview.text}\n$text"
         }
     }
 
