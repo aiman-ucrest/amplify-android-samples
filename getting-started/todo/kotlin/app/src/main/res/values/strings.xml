@@ -42,4 +42,6 @@
     <string name="happy_again">Are you happy again?</string>
     <string name="signout">Sign Out</string>
     <string name="profile">Profile</string>
+    <string name="close_connection">Close Connection</string>
+    <string name="connect">Connect to Socket</string>
 </resources>

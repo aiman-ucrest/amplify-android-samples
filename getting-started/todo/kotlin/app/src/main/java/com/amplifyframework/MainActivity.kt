@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.amplifyframework.auth.cognito.AWSCognitoAuthSession
 import com.amplifyframework.auth.result.AuthSessionResult
@@ -28,8 +29,10 @@ class MainActivity: AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val handler = Handler(Looper.getMainLooper())
     private val webSocketAdapter = DefaultWebSocketAdapter()
+    private val viewModel by viewModels<MainViewModel>()
     private val observer = object : WebSocketAdapterObserver() {
         override fun onConnect() {
+            viewModel.isConnected.postValue(true)
             updateDescTextView("===Connected===")
         }
 
@@ -38,6 +41,7 @@ class MainActivity: AppCompatActivity() {
         }
 
         override fun onClose(status: String) {
+            viewModel.isConnected.postValue(false)
             updateDescTextView("===Closed===")
         }
 
@@ -47,7 +51,9 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.lifecycleOwner = this
         binding.handler = this
+        binding.viewModel = viewModel
 
         binding.descTextview.movementMethod = ScrollingMovementMethod()
 
@@ -105,6 +111,17 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
+    fun onCloseConnect(isConnected: Boolean?) {
+        Log.d(TAG, "onCloseConnect::")
+        if (isConnected == true) {
+            Log.d(TAG, "onCloseConnect:: closing..")
+            closeWebSocket()
+        } else {
+            Log.d(TAG, "onCloseConnect:: connecting..")
+            initWebSocket()
+        }
+    }
+
     private fun closeWebSocket() {
         val initiated = webSocketAdapter.close()
         Log.d(TAG, "closeWebSocket:: initiated= $initiated")
@@ -113,28 +130,6 @@ class MainActivity: AppCompatActivity() {
     private fun initWebSocket() {
         val initiated = webSocketAdapter.create(Constants.WEB_SOCKET_URL, observer)
         Log.d(TAG, "initWebSocket:: initiated= $initiated")
-    }
-
-    private fun fetchIdentityId() {
-        Amplify.Auth.fetchAuthSession(
-            { result ->
-                val cognitoAuthSession = result as AWSCognitoAuthSession
-                when (cognitoAuthSession.identityId.type) {
-                    AuthSessionResult.Type.SUCCESS -> {
-                        updateDescTextView("IdentityId: " + cognitoAuthSession.identityId.value)
-                    }
-                    AuthSessionResult.Type.FAILURE -> {
-                        val error = cognitoAuthSession.identityId.error?.message ?: cognitoAuthSession.identityId.error.toString()
-                        showToastMessage("IdentityId not present because: $error")
-                        updateDescTextView(error)
-                    }
-                }
-            },
-            { error ->
-                showToastMessage(error.message)
-                updateDescTextView(error.message ?: error.toString())
-            }
-        )
     }
 
     private fun updateDescTextView(text: String) {
