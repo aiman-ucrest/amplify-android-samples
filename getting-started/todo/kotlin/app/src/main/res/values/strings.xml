@@ -25,6 +25,9 @@
     <string name="forgot_password">Forgot password</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="new_password">New Password</string>
+    <string name="current_password">Current Password</string>
+    <string name="change_password">Change Password</string>
     <string name="start_here">Start here</string>
     <string name="register">Register</string>
     <string name="reenter_password">Re-enter password</string>
@@ -38,4 +41,5 @@
     <string name="send_password_code">Send</string>
     <string name="happy_again">Are you happy again?</string>
     <string name="signout">Sign Out</string>
+    <string name="profile">Profile</string>
 </resources>

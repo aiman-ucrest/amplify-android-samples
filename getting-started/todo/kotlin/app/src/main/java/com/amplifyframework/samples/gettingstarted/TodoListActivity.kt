@@ -5,18 +5,18 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.amplifyframework.ResetPasswordActivity
 import com.amplifyframework.SignInActivity
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.datastore.generated.model.Priority
 import com.amplifyframework.datastore.generated.model.Todo
 import com.amplifyframework.samples.core.ActivityNavigationUtil
+import com.amplifyframework.samples.core.Constants
 import com.amplifyframework.samples.core.ListActivity
-import java.util.logging.Logger
 
 class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
     private val itemAdapter = TodoItemAdapter(this, this)
@@ -101,6 +101,10 @@ class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
                 itemAdapter.sortName(hideStatus, TodoItemAdapter.SortOrder.DESCENDING)
                 true
             }
+            R.id.change_password -> {
+                launchChangePassword()
+                true
+            }
             R.id.signout -> {
                 Amplify.Auth.signOut(
                     {
@@ -122,6 +126,18 @@ class TodoListActivity : ListActivity(), TodoItemAdapter.OnItemClickListener {
                 super.onOptionsItemSelected(item)
             }
         }
+    }
+
+    private fun launchChangePassword() {
+        Log.d(TAG, "launchChangePassword::")
+        ActivityNavigationUtil.navigateToActivity(
+            this,
+            ResetPasswordActivity::class.java,
+            Bundle().apply {
+                putBoolean(Constants.EXTRA_IS_NEED_CODE, false)
+            },
+            ActivityNavigationUtil.ActivityFinishMode.KEEP_ACTIVITY
+        )
     }
 
     override fun fabAction() {

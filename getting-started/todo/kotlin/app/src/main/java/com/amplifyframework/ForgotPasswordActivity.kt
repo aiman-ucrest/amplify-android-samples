@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.amplifyframework.auth.result.step.AuthResetPasswordStep
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.samples.core.ActivityNavigationUtil
+import com.amplifyframework.samples.core.Constants.EXTRA_IS_NEED_CODE
 import com.amplifyframework.samples.gettingstarted.databinding.ActivityForgotPasswordBinding
 
 class ForgotPasswordActivity : AppCompatActivity() {
@@ -75,6 +76,9 @@ class ForgotPasswordActivity : AppCompatActivity() {
         ActivityNavigationUtil.navigateToActivity(
             this,
             ResetPasswordActivity::class.java,
+            Bundle().apply {
+                putBoolean(EXTRA_IS_NEED_CODE, true)
+            },
             ActivityNavigationUtil.ActivityFinishMode.KEEP_ACTIVITY
         )
     }
