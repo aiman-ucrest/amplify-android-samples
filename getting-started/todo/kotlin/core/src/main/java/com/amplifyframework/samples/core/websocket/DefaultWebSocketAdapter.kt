@@ -11,18 +11,23 @@ class DefaultWebSocketAdapter : IWebSocketAdapter {
             .pingInterval(60, TimeUnit.SECONDS)
             .build()
     private var session: WebSocket? = null
-    private var hasActiveConnection = false
-    private var isConnectRequested = false
+    var hasActiveConnection = false
+        private set
+    var isConnectRequested = false
+        private set
 
     private val TAG = "DefaultWebSocketAdapter"
 
-    override fun create(url: String, observer: WebSocketAdapterObserver) {
+    /**
+    * @return true if initiated, else false
+    * */
+    override fun create(url: String, observer: WebSocketAdapterObserver): Boolean {
         Log.d(TAG, "create:: creating connection for url= $url..")
-        isConnectRequested = true
         if (hasActiveConnection || isConnectRequested) {
             Log.w(TAG, "create:: already have an active connection! please close it first & retry.")
-            return
+            return false
         }
+        isConnectRequested = true
         val request = Request.Builder().url(url).build()
         client.newWebSocket(request, object : WebSocketListener() {
            override fun onOpen(webSocket: WebSocket, response: Response) {
@@ -58,18 +63,23 @@ class DefaultWebSocketAdapter : IWebSocketAdapter {
                 observer.onClose(reason)
             }
         })
+        return true
     }
 
-    override fun close() {
+    /**
+     * @return true if initiated, else false
+     * */
+    override fun close(): Boolean {
         Log.d(TAG, "close:: closing connection..")
         isConnectRequested = false
         if (session == null) {
             Log.w(TAG, "close:: no active session, do nothing..")
-            return
+            return false
         }
         // ref: https://datatracker.ietf.org/doc/html/rfc6455#section-7.4
         session?.close(1000, "Close Requested")
         session = null
+        return true
     }
 
 

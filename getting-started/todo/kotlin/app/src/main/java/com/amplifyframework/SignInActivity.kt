@@ -97,9 +97,14 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun launchTodoScreen() {
-        ActivityNavigationUtil.navigateToActivity(
+        /*ActivityNavigationUtil.navigateToActivity(
             this,
             TodoListActivity::class.java,
+            ActivityNavigationUtil.ActivityFinishMode.FINISH_ALL
+        )*/
+        ActivityNavigationUtil.navigateToActivity(
+            this,
+            MainActivity::class.java,
             ActivityNavigationUtil.ActivityFinishMode.FINISH_ALL
         )
     }
