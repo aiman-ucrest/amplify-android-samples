@@ -9,5 +9,5 @@ wss.on('connection', ws => {
     console.log(`Received message => ${message}`)
     ws.send('Pong!')
   })
-  ws.send('Hello! Message From Server! :)')
+  ws.send('First hello from server! :)')
 })

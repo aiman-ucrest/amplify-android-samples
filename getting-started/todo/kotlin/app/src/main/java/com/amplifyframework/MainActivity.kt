@@ -19,6 +19,8 @@ import com.amplifyframework.samples.core.websocket.DefaultWebSocketAdapter
 import com.amplifyframework.samples.core.websocket.WebSocketAdapterObserver
 import com.amplifyframework.samples.gettingstarted.R
 import com.amplifyframework.samples.gettingstarted.databinding.ActivityMainBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity: AppCompatActivity() {
     private val TAG = "MainActivity"
@@ -137,8 +139,13 @@ class MainActivity: AppCompatActivity() {
 
     private fun updateDescTextView(text: String) {
         handler.post {
-            binding.descTextview.visibility = View.VISIBLE
-            binding.descTextview.append("\n$text")
+            val date = Calendar.getInstance().time
+            // val formatter = SimpleDateFormat("dd MMM yyyy HH:mm:ss.SSS", Locale.ENGLISH) //or use getDateTimeInstance()
+            val formatter = SimpleDateFormat("HH:mm:ss.SSS", Locale.ENGLISH) //or use getDateTimeInstance()
+            val formattedDate = formatter.format(date)
+
+            //binding.descTextview.append("\n$formattedDate")
+            binding.descTextview.append("\n[$formattedDate]\t\t$text\n")
         }
     }
 
