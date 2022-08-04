@@ -17,7 +17,6 @@ import com.amplifyframework.samples.core.Constants
 import com.amplifyframework.samples.core.websocket.DefaultWebSocketAdapter
 import com.amplifyframework.samples.core.websocket.WebSocketAdapterObserver
 import com.amplifyframework.samples.gettingstarted.R
-import com.amplifyframework.samples.gettingstarted.TodoListActivity
 import com.amplifyframework.samples.gettingstarted.databinding.ActivityMainBinding
 
 class MainActivity: AppCompatActivity() {
@@ -47,7 +46,16 @@ class MainActivity: AppCompatActivity() {
         setContentView(binding.root)
 
         //fetchIdentityId()
+    }
+
+    override fun onResume() {
         initWebSocket()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        closeWebSocket()
+        super.onPause()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -78,11 +86,6 @@ class MainActivity: AppCompatActivity() {
                 super.onOptionsItemSelected(item)
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        closeWebSocket()
     }
 
     private fun closeWebSocket() {
