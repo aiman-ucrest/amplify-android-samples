@@ -3,6 +3,7 @@ package com.amplifyframework.samples.core.websocket
 import android.util.Log
 import okhttp3.*
 import okio.ByteString
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class DefaultWebSocketAdapter : IWebSocketAdapter {
@@ -23,16 +24,23 @@ class DefaultWebSocketAdapter : IWebSocketAdapter {
      * */
     override fun create(url: String, observer: WebSocketAdapterObserver): Boolean {
         Log.d(TAG, "create:: creating connection for url= $url..")
-        if (hasActiveConnection || isConnectRequested) {
+        if (isHasConnection()) {
             Log.w(TAG, "create:: already have an active connection! please close it first & retry.")
             return false
         }
+        /*if (client.dispatcher.executorService.isShutdown) {
+            Log.w(TAG, "create:: executorService already shutdown!")
+            return false
+        }*/
         isConnectRequested = true
+
+        client.connectionPool.evictAll()
+
         val request = Request.Builder().url(url).build()
-        client.newWebSocket(request, object : WebSocketListener() {
+        session = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 Log.d(TAG, "onOpen::")
-                session = webSocket
+                // session = webSocket
                 hasActiveConnection = true
                 isConnectRequested = false
                 observer.onConnect()
@@ -40,9 +48,10 @@ class DefaultWebSocketAdapter : IWebSocketAdapter {
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 Log.w(TAG, "onFailure:: response= $response", t)
+                hasActiveConnection = false
                 isConnectRequested = false
                 observer.onFailure(t.message ?: t.toString())
-                // todo request reconnect
+                closeAndReconnect(url, observer)
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
@@ -65,7 +74,38 @@ class DefaultWebSocketAdapter : IWebSocketAdapter {
                 observer.onClose(reason)
             }
         })
+
+        // client.connectionPool.evictAll()
+
         return true
+    }
+
+    private fun isHasConnection() = hasActiveConnection || isConnectRequested
+
+    private fun closeAndReconnect(url: String, observer: WebSocketAdapterObserver) {
+        Log.d(TAG, "closeAndReconnect::")
+        Executors.newSingleThreadScheduledExecutor().schedule({
+            if (client.dispatcher.executorService.isShutdown) {
+                Log.w(TAG, "closeAndReconnect:: executorService already shutdown!")
+                return@schedule
+            }
+            Log.d(TAG, "closeAndReconnect:: execute after 5s delay")
+            close()
+            if (!isHasConnection()) {
+                create(url, observer)
+            }
+        }, 5, TimeUnit.SECONDS) // reconnect in after 2s
+        /*if (client.dispatcher.executorService.isShutdown) {
+            Log.w(TAG, "closeAndReconnect:: executorService already shutdown!")
+        } else {
+            Executors.newSingleThreadScheduledExecutor().schedule({
+                Log.d(TAG, "closeAndReconnect:: execute after 5s delay")
+                close()
+                if (!isHasConnection()) {
+                    create(url, observer)
+                }
+            }, 5, TimeUnit.SECONDS) // reconnect in after 2s
+        }*/
     }
 
     /**
@@ -82,6 +122,11 @@ class DefaultWebSocketAdapter : IWebSocketAdapter {
         session?.close(1000, "Close Requested")
         session = null
         return true
+    }
+
+    fun shutdown() {
+        client.connectionPool.evictAll()
+        client.dispatcher.executorService.shutdown()
     }
 
     /**

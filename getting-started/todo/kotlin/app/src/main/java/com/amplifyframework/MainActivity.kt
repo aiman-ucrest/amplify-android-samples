@@ -7,12 +7,9 @@ import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.amplifyframework.auth.cognito.AWSCognitoAuthSession
-import com.amplifyframework.auth.result.AuthSessionResult
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.samples.core.ActivityNavigationUtil
 import com.amplifyframework.samples.core.Constants
@@ -23,7 +20,7 @@ import com.amplifyframework.samples.gettingstarted.databinding.ActivityMainBindi
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity: AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
     private lateinit var binding: ActivityMainBinding
@@ -71,7 +68,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     override fun onPause() {
-        closeWebSocket()
+        closeWebSocket(needShutDown = true)
         super.onPause()
     }
 
@@ -81,7 +78,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.signout -> {
                 Amplify.Auth.signOut(
                     {
@@ -107,7 +104,7 @@ class MainActivity: AppCompatActivity() {
 
     fun onPing() {
         Log.d(TAG, "onPing::")
-        val msg= "\tClient: Ping!"
+        val msg = "\tClient: Ping!"
         val enqueued = webSocketAdapter.send(msg)
         if (enqueued) {
             updateDescTextView(msg)
@@ -127,9 +124,12 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
-    private fun closeWebSocket() {
+    private fun closeWebSocket(needShutDown: Boolean = false) {
         val initiated = webSocketAdapter.close()
         Log.d(TAG, "closeWebSocket:: initiated= $initiated")
+        if (needShutDown) {
+            webSocketAdapter.shutdown()
+        }
     }
 
     private fun initWebSocket() {
@@ -141,7 +141,8 @@ class MainActivity: AppCompatActivity() {
         handler.post {
             val date = Calendar.getInstance().time
             // val formatter = SimpleDateFormat("dd MMM yyyy HH:mm:ss.SSS", Locale.ENGLISH) //or use getDateTimeInstance()
-            val formatter = SimpleDateFormat("HH:mm:ss.SSS", Locale.ENGLISH) //or use getDateTimeInstance()
+            val formatter =
+                SimpleDateFormat("HH:mm:ss.SSS", Locale.ENGLISH) //or use getDateTimeInstance()
             val formattedDate = formatter.format(date)
 
             //binding.descTextview.append("\n$formattedDate")
