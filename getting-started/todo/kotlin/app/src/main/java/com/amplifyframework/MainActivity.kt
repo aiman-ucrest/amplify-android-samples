@@ -90,7 +90,13 @@ class MainActivity: AppCompatActivity() {
 
     fun onPing() {
         Log.d(TAG, "onPing::")
-        webSocketAdapter.send("\tMe: Ping!")
+        val msg= "\tMe: Ping!"
+        val enqueued = webSocketAdapter.send(msg)
+        if (enqueued) {
+            updateDescTextView(msg)
+        } else {
+            updateDescTextView(("ERROR:: Ping failed!"))
+        }
     }
 
     private fun closeWebSocket() {
