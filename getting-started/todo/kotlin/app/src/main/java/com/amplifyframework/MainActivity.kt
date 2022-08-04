@@ -3,6 +3,7 @@ package com.amplifyframework
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -45,6 +46,9 @@ class MainActivity: AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.handler = this
+
+        binding.descTextview.movementMethod = ScrollingMovementMethod()
+
         //fetchIdentityId()
     }
 
@@ -134,7 +138,7 @@ class MainActivity: AppCompatActivity() {
     private fun updateDescTextView(text: String) {
         handler.post {
             binding.descTextview.visibility = View.VISIBLE
-            binding.descTextview.text = "${binding.descTextview.text}\n$text"
+            binding.descTextview.append("\n$text")
         }
     }
 
