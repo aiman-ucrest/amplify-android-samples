@@ -44,7 +44,7 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        binding.handler = this
         //fetchIdentityId()
     }
 
@@ -86,6 +86,11 @@ class MainActivity: AppCompatActivity() {
                 super.onOptionsItemSelected(item)
             }
         }
+    }
+
+    fun onPing() {
+        Log.d(TAG, "onPing::")
+        webSocketAdapter.send("\tMe: Ping!")
     }
 
     private fun closeWebSocket() {

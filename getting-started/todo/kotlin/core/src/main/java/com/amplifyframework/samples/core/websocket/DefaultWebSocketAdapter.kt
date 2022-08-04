@@ -19,8 +19,8 @@ class DefaultWebSocketAdapter : IWebSocketAdapter {
     private val TAG = "DefaultWebSocketAdapter"
 
     /**
-    * @return true if initiated, else false
-    * */
+     * @return true if initiated, else false
+     * */
     override fun create(url: String, observer: WebSocketAdapterObserver): Boolean {
         Log.d(TAG, "create:: creating connection for url= $url..")
         if (hasActiveConnection || isConnectRequested) {
@@ -30,12 +30,12 @@ class DefaultWebSocketAdapter : IWebSocketAdapter {
         isConnectRequested = true
         val request = Request.Builder().url(url).build()
         client.newWebSocket(request, object : WebSocketListener() {
-           override fun onOpen(webSocket: WebSocket, response: Response) {
+            override fun onOpen(webSocket: WebSocket, response: Response) {
                 Log.d(TAG, "onOpen::")
-               session = webSocket
-               hasActiveConnection = true
-               isConnectRequested = false
-               observer.onConnect()
+                session = webSocket
+                hasActiveConnection = true
+                isConnectRequested = false
+                observer.onConnect()
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
@@ -80,6 +80,17 @@ class DefaultWebSocketAdapter : IWebSocketAdapter {
         session?.close(1000, "Close Requested")
         session = null
         return true
+    }
+
+    /**
+     * @return true if enqueued, else false
+     * */
+    override fun send(message: String): Boolean {
+        Log.d(TAG, "send:: sending message= $message..")
+        return session?.send(message) ?: kotlin.run {
+            Log.w(TAG, "send:: no active session, do nothing..")
+            false
+        }
     }
 
 
