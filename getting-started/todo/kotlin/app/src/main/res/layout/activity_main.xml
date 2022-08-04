@@ -53,6 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/dimen_8"
             android:onClick='@{() -> handler.onPing()}'
+            android:enabled="@{viewModel.connected}"
             android:text="Ping!"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
