@@ -103,13 +103,16 @@ class MainActivity : AppCompatActivity() {
 
     fun onPing() {
         Log.d(TAG, "onPing::")
-        val msg = "\tClient: Ping!"
-        val enqueued = webSocketAdapter.send(msg)
-        if (enqueued) {
-            updateDescTextView(msg)
-        } else {
-            updateDescTextView(("ERROR:: Ping failed!"))
-        }
+        viewModel.messageToSend.value?.let {
+            val enqueued = webSocketAdapter.send(it)
+            if (enqueued) {
+                updateDescTextView("\tClient: $it")
+            } else {
+                updateDescTextView(("ERROR:: Ping failed!"))
+            }
+            viewModel.nextMessage()
+
+        } ?: Log.w(TAG, "onPing:: messageToSend unexpectedly null!")
     }
 
     fun onCloseConnect(isConnected: Boolean?) {

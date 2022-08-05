@@ -54,7 +54,7 @@
             android:layout_marginVertical="@dimen/dimen_8"
             android:onClick='@{() -> handler.onPing()}'
             android:enabled="@{viewModel.connected}"
-            android:text="Ping!"
+            android:text="@{viewModel.messageToSend}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
