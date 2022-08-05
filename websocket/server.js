@@ -17,8 +17,8 @@ wss.on('connection', function connection(ws, req) {
 
   ws.on('message', message => {
     console.log(`Received message => ${message}`)
-  console.log(`Reply 'Pong!'`)
-    ws.send('Pong!')
+  console.log(`Replying..`)
+    ws.send(`You said '${message}'?`)
   })
 
   ws.on('close', function clear(code, reason) {
